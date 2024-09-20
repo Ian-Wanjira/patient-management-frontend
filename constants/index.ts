@@ -4,7 +4,7 @@ export const PatientFormDefaultValues = {
   name: '',
   email: '',
   phone: '',
-  dateOfBirth: new Date(Date.now()),
+  dateOfBirth: new Date(Date.now()).toISOString().split('T')[0],
   gender: 'male' as Gender,
   address: '',
   occupation: '',

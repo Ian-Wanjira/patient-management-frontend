@@ -142,7 +142,7 @@ const RenderField = ({ field, props }: RenderFieldProps) => {
             <DatePicker
               selected={field.value}
               onChange={(date: Date | null) => field.onChange(date)}
-              dateFormat="MMM/dd/yyyy"
+              dateFormat="yyyy/MM/dd"
               closeOnScroll={true}
               wrapperClassName="date-picker"
             />

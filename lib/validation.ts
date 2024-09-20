@@ -19,7 +19,12 @@ export const RegisterFormSchema = z.object({
   phone: z
     .string()
     .refine((phone) => /^\+\d{10,15}$/.test(phone), 'Invalid phone number'),
-  dateOfBirth: z.coerce.date(),
+  dateOfBirth: z.coerce.date().transform((date) => {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }),
   gender: z.enum(['male', 'female', 'other']),
   address: z
     .string()

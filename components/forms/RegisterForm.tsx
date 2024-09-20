@@ -17,11 +17,12 @@ import {
   Doctors,
   IdentificationTypes,
 } from '@/constants';
+import { registerPatient } from '@/lib/actions/patient.actions';
 import { RegisterFormSchema } from '@/lib/validation';
 
 import { FormFieldTypes } from './PatientForm';
 
-const RegisterForm = ({ patientData }: { patientData: userParams }) => {
+const RegisterForm = ({ patientData }: { patientData: UserParams }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<z.infer<typeof RegisterFormSchema>>({
@@ -34,10 +35,29 @@ const RegisterForm = ({ patientData }: { patientData: userParams }) => {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof RegisterFormSchema>) => {
+  const onSubmit = async (values: z.infer<typeof RegisterFormSchema>) => {
+    setIsLoading(true);
     try {
-      console.log('Register Form Values: ', values);
-      setIsLoading(true);
+      const formData = new FormData();
+
+      Object.entries(values).forEach(([key, value]) => {
+        // Handle the `identificationDocument` field explicitly
+        if (key === 'identificationDocument' && Array.isArray(value)) {
+          value.forEach((file) => {
+            if (file instanceof File) {
+              formData.append(`identificationDocument`, file); // Correct handling of files
+            }
+          });
+          return; // Skip further processing for `identificationDocument`
+        }
+        // Handle all other fields (boolean, string, etc.)
+        if (value !== undefined && value !== null) {
+          formData.append(key, String(value));
+        }
+      });
+
+      const response = await registerPatient(formData);
+      console.log(response);
     } catch (error) {
       console.error(error);
     } finally {

@@ -8,6 +8,7 @@ import { z } from 'zod';
 import CustomFormField from '@/components/CustomFormField';
 import SubmitButton from '@/components/SubmitButton';
 import { Form } from '@/components/ui/form';
+import { InitialFormDefaultValues } from '@/constants';
 import { PatientFormSchema } from '@/lib/validation';
 
 export enum FormFieldTypes {
@@ -31,24 +32,23 @@ const PatientForm = ({ setRegisterForm, userData }: PatientFormProps) => {
   const form = useForm<z.infer<typeof PatientFormSchema>>({
     resolver: zodResolver(PatientFormSchema),
     defaultValues: {
-      username: '',
-      email: '',
-      phone: '',
+      ...InitialFormDefaultValues,
     },
   });
 
-  function onSubmit(values: z.infer<typeof PatientFormSchema>) {
+  const onSubmit = (values: z.infer<typeof PatientFormSchema>) => {
     setIsLoading(true);
     setRegisterForm(true);
-    userData(values);
 
     try {
+      userData(values);
       console.log(values);
     } catch (error) {
+      console.error(error);
     } finally {
-      // setIsLoading(false);
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <Form {...form}>
@@ -61,9 +61,9 @@ const PatientForm = ({ setRegisterForm, userData }: PatientFormProps) => {
         <CustomFormField
           control={form.control}
           fieldType={FormFieldTypes.INPUT}
-          name="username"
-          label="Username"
-          placeholder="username"
+          name="name"
+          label="Full Name"
+          placeholder="John Doe"
           iconSrc="/assets/icons/user.svg"
           iconAlt="user icon"
         />
@@ -77,8 +77,8 @@ const PatientForm = ({ setRegisterForm, userData }: PatientFormProps) => {
           iconAlt="email icon"
         />
         <CustomFormField
-          fieldType={FormFieldTypes.PHONE_INPUT}
           control={form.control}
+          fieldType={FormFieldTypes.PHONE_INPUT}
           name="phone"
           label="Phone Number"
         />

@@ -38,6 +38,8 @@ type CustomFormFieldProps = {
   iconAlt?: string;
   children?: React.ReactNode;
   disabled?: boolean;
+  dateFormat?: string;
+  showTimeSelect?: boolean;
   renderSkeleton?: (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     field: ControllerRenderProps<any, string>,
@@ -60,6 +62,8 @@ const RenderField = ({ field, props }: RenderFieldProps) => {
     disabled,
     name,
     label,
+    dateFormat,
+    showTimeSelect,
     renderSkeleton,
   } = props;
 
@@ -140,9 +144,10 @@ const RenderField = ({ field, props }: RenderFieldProps) => {
           />
           <FormControl>
             <DatePicker
+              showTimeSelect={showTimeSelect ?? false}
               selected={field.value}
               onChange={(date: Date | null) => field.onChange(date)}
-              dateFormat="yyyy/MM/dd"
+              dateFormat={dateFormat}
               closeOnScroll={true}
               wrapperClassName="date-picker"
             />

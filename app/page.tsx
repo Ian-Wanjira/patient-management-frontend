@@ -21,7 +21,7 @@ const Home = () => {
     <>
       {isRegisterForm ? (
         <div className="flex h-screen max-h-screen">
-          <section className="remove-scrollbar container">
+          <section className="remove-scrollbar container overflow-y-auto">
             <div className="sub-container max-w-[800px] flex-1 flex-col py-10">
               <Image
                 src="/assets/icons/logo-full.svg"
@@ -50,7 +50,7 @@ const Home = () => {
         </div>
       ) : (
         <div className="flex h-screen max-h-screen">
-          <section className="remove-scrollbar container my-auto">
+          <section className="remove-scrollbar container overflow-y-auto">
             <div className="sub-container max-w-[496px]">
               <Image
                 src="/assets/icons/logo-full.svg"

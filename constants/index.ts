@@ -4,7 +4,7 @@ export const PatientFormDefaultValues = {
   name: '',
   email: '',
   phone: '',
-  dateOfBirth: new Date(Date.now()).toISOString().split('T')[0],
+  dateOfBirth: new Date(Date.now()),
   gender: 'male' as Gender,
   address: '',
   occupation: '',
@@ -30,6 +30,15 @@ export const InitialFormDefaultValues = {
   name: '',
   email: '',
   phone: '',
+};
+
+export const AppointmentFormDefaultValues = {
+  patient: '',
+  doctor: '',
+  schedule: new Date(Date.now()),
+  reason: '',
+  notes: '',
+  cancellationReason: '',
 };
 
 export const IdentificationTypes = [

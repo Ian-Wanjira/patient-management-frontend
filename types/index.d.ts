@@ -1,5 +1,25 @@
 declare type Gender = 'male' | 'female' | 'other';
 
+declare type SearchParamProps = {
+  params: { [key: string]: string };
+  searchParams: { [key: string]: string | string[] | undefined };
+};
+
+declare type Doctor = {
+  id: string;
+  name: string;
+  email: string;
+  image: string;
+};
+
+declare type Appointment = {
+  patient: string;
+  doctor: string;
+  schedule: string;
+  reason: string;
+  notes?: string;
+};
+
 declare interface UserParams {
   name: string;
   email: string;

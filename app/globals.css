@@ -32,11 +32,15 @@
   }
 
   .side-img {
-    @apply hidden h-full object-cover md:block;
+    @apply hidden h-full object-cover md:block sticky top-0;
   }
 
   .sub-container {
     @apply mx-auto flex size-full flex-col py-10;
+  }
+
+  .header {
+    @apply text-32-bold md:text-36-bold;
   }
 
   .sub-header {
@@ -45,6 +49,19 @@
 
   .side-img {
     @apply hidden h-full md:block;
+  }
+
+  .copyright {
+    @apply text-14-regular justify-items-end text-center text-dark-600 xl:text-left;
+  }
+
+  /* SUCCESS */
+  .success-img {
+    @apply m-auto flex flex-1 flex-col items-center justify-between gap-10 py-10;
+  }
+
+  .request-details {
+    @apply flex w-full flex-col items-center gap-8 border-y-2 border-dark-400 py-8 md:w-fit md:flex-row;
   }
 
   /* SHADCN OVERRIDES */
@@ -123,6 +140,10 @@
 
   .text-12-regular {
     @apply text-[12px] leading-[16px] font-normal;
+  }
+
+  .text-14-regular {
+    @apply text-[14px] leading-[18px] font-normal;
   }
 }
 

@@ -1,6 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -14,9 +15,9 @@ import { SelectItem } from '@/components/ui/select';
 import {
   PatientFormDefaultValues,
   GenderOptions,
-  Doctors,
   IdentificationTypes,
 } from '@/constants';
+import { getDoctors } from '@/lib/actions/doctor.actions';
 import { registerPatient } from '@/lib/actions/patient.actions';
 import { RegisterFormSchema } from '@/lib/validation';
 
@@ -24,9 +25,24 @@ import { FormFieldTypes } from './PatientForm';
 
 const RegisterForm = ({ patientData }: { patientData: UserParams }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [doctors, setDoctors] = useState<Doctor[]>([]);
+  const router = useRouter();
+
+  const fetchDoctors = useCallback(async () => {
+    try {
+      const response = await getDoctors();
+      setDoctors(response);
+      console.log(response);
+    } catch (error) {}
+  }, []);
+
+  useEffect(() => {
+    fetchDoctors();
+  }, [fetchDoctors]);
 
   const form = useForm<z.infer<typeof RegisterFormSchema>>({
     resolver: zodResolver(RegisterFormSchema),
+    // @ts-expect-error Fix later
     defaultValues: {
       ...PatientFormDefaultValues,
       name: patientData.name,
@@ -37,6 +53,7 @@ const RegisterForm = ({ patientData }: { patientData: UserParams }) => {
 
   const onSubmit = async (values: z.infer<typeof RegisterFormSchema>) => {
     setIsLoading(true);
+    console.log('DOB', values.dateOfBirth);
     try {
       const formData = new FormData();
 
@@ -57,7 +74,10 @@ const RegisterForm = ({ patientData }: { patientData: UserParams }) => {
       });
 
       const response = await registerPatient(formData);
-      console.log(response);
+      if (response) {
+        console.log('User Created: ', response);
+        router.push(`patient/${response.data.id}/new-appointment`);
+      }
     } catch (error) {
       console.error(error);
     } finally {
@@ -115,6 +135,7 @@ const RegisterForm = ({ patientData }: { patientData: UserParams }) => {
               fieldType={FormFieldTypes.DATE_PICKER}
               name="dateOfBirth"
               label="Date of Birth"
+              dateFormat="yyyy-MM-dd"
             />
             <CustomFormField
               control={form.control}
@@ -193,7 +214,7 @@ const RegisterForm = ({ patientData }: { patientData: UserParams }) => {
             label="Primary care physician"
             placeholder="Select a physician"
           >
-            {Doctors.map((doctor, i) => (
+            {doctors.map((doctor, i) => (
               <SelectItem key={doctor.name + i} value={doctor.name}>
                 <div className="flex cursor-pointer items-center gap-2">
                   <Image

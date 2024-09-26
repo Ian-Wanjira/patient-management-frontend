@@ -8,7 +8,7 @@ export const registerPatient = async (patient: FormData) => {
   console.log(patient);
   try {
     const response = await axiosInstance.post(
-      '/api/patient/complete-registration/',
+      '/api/patient/patient-registration/',
       patient,
       {
         headers: {
@@ -17,6 +17,7 @@ export const registerPatient = async (patient: FormData) => {
       },
     );
     console.log(response);
+    return response;
   } catch (error) {
     console.error(error);
   }

@@ -85,3 +85,23 @@ export const RegisterFormSchema = z.object({
     .min(8, { message: 'Password must be at least 8 characters' })
     .max(50, { message: 'Password must be at most 50 characters' }),
 });
+
+export const AppointmentFormSchema = z.object({
+  patient: z.string(),
+  doctor: z.string().min(1, { message: 'Select at least 1 doctor' }),
+  schedule: z.coerce.date().transform((date) => {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const seconds = date.getSeconds().toString().padStart(2, '0');
+    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+  }),
+  reason: z
+    .string()
+    .min(2, { message: 'Reason must be at least 2 characters' })
+    .max(500, { message: 'Reason must be at most 500 characters' }),
+  notes: z.string().optional(),
+  cancellationReason: z.string().optional(),
+});

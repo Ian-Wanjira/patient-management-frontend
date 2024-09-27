@@ -6,8 +6,9 @@ import { useState } from 'react';
 
 import PatientForm from '@/components/forms/PatientForm';
 import RegisterForm from '@/components/forms/RegisterForm';
+import PasskeyModal from '@/components/PasskeyModal';
 
-const Home = () => {
+const Home = ({ searchParams }: SearchParamProps) => {
   const [isRegisterForm, setIsRegisterForm] = useState(false);
   console.log('RegisterForm', isRegisterForm);
   const [userParams, setUserParams] = useState({
@@ -15,7 +16,7 @@ const Home = () => {
     email: '',
     phone: '',
   });
-  console.log('UserParams', userParams);
+  const isAdmin = searchParams?.admin === 'true';
 
   return (
     <>
@@ -50,6 +51,8 @@ const Home = () => {
         </div>
       ) : (
         <div className="flex h-screen max-h-screen">
+          {isAdmin && <PasskeyModal />}
+
           <section className="remove-scrollbar container overflow-y-auto">
             <div className="sub-container max-w-[496px]">
               <Image

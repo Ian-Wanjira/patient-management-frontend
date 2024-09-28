@@ -69,6 +69,14 @@
     @apply sticky top-3 z-20 mx-3 flex items-center justify-between rounded-2xl bg-dark-200 px-[5%] py-5 shadow-lg xl:px-12;
   }
 
+  .admin-main {
+    @apply flex flex-col items-center space-y-6 px-[5%] pb-12 xl:space-y-12 xl:px-12;
+  }
+
+  .admin-stat {
+    @apply flex w-full flex-col justify-between gap-5 sm:flex-row xl:gap-10;
+  }
+
   /* SHADCN OVERRIDES */
   .shad-primary-btn {
     @apply bg-green-500 text-white !important;
@@ -122,6 +130,11 @@
 
   .file-upload_label {
     @apply flex flex-col justify-center gap-2 text-center text-dark-600;
+  }
+
+  /* Stat Card */
+  .stat-card {
+    @apply flex flex-1 flex-col gap-6 rounded-2xl bg-cover p-6 shadow-lg;
   }
 
   /* REACT PHONE NUMBER INPUT OVERRIDES */

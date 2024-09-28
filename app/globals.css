@@ -64,6 +64,11 @@
     @apply flex w-full flex-col items-center gap-8 border-y-2 border-dark-400 py-8 md:w-fit md:flex-row;
   }
 
+  /* ADMIN */
+  .admin-header {
+    @apply sticky top-3 z-20 mx-3 flex items-center justify-between rounded-2xl bg-dark-200 px-[5%] py-5 shadow-lg xl:px-12;
+  }
+
   /* SHADCN OVERRIDES */
   .shad-primary-btn {
     @apply bg-green-500 text-white !important;
@@ -144,6 +149,10 @@
 
   .text-18-bold {
     @apply text-[18px] leading-[24px] font-bold;
+  }
+
+  .text-16-semibold {
+    @apply text-[16px] leading-[20px] font-semibold;
   }
 
   .text-14-medium {

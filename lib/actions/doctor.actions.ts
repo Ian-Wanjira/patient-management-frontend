@@ -15,7 +15,7 @@ export const getDoctors = async () => {
 
 export const getDoctor = async (id: string) => {
   try {
-    const response = await axiosInstance(`/api/doctor/${id}/`);
+    const response = await axiosInstance.get(`/api/doctor/${id}/`);
     return response.data;
   } catch (error) {
     console.error(error);

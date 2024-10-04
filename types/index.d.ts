@@ -1,5 +1,7 @@
 declare type Gender = 'male' | 'female' | 'other';
 
+declare type Status = 'pending' | 'scheduled' | 'cancelled';
+
 declare type SearchParamProps = {
   params: { [key: string]: string };
   searchParams: { [key: string]: string | string[] | undefined };
@@ -13,14 +15,48 @@ declare type Doctor = {
 };
 
 declare type Appointment = {
+  id: string;
+  patient: PatientData;
+  doctor: Doctor;
+  schedule: Date;
+  reason?: string;
+  notes?: string;
+  status?: string;
+  cancellationReason?: string;
+};
+
+declare type AppointmentForm = {
   patient: string;
   doctor: string;
-  schedule: string;
-  reason: string;
+  schedule: Date;
+  reason?: string;
   notes?: string;
+  status?: string;
+  cancellationReason?: string;
+};
+declare type ScheduleAppointmentForm = {
+  doctor: string;
+  schedule: Date;
+  reason?: string;
+  notes?: string;
+  status?: string;
+  cancellationReason?: string;
+};
+
+declare type AppointmentCounts = {
+  scheduled: number;
+  pending: number;
+  cancelled: number;
+};
+
+declare type AppointmentStatus = {
+  scheduled: string;
+  pending: string;
+  cancelled: string;
 };
 
 declare interface UserParams {
+  id?: string;
   name: string;
   email: string;
   phone: string;

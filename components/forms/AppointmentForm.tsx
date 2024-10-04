@@ -3,7 +3,13 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useCallback, useEffect, useState } from 'react';
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -12,71 +18,132 @@ import { FormFieldTypes } from '@/components/forms/PatientForm';
 import SubmitButton from '@/components/SubmitButton';
 import { Form } from '@/components/ui/form';
 import { SelectItem } from '@/components/ui/select';
-import { AppointmentFormDefaultValues } from '@/constants';
-import { createAppointment } from '@/lib/actions/appointment.actions';
+import {
+  createAppointment,
+  updateAppointment,
+} from '@/lib/actions/appointment.actions';
 import { getDoctors } from '@/lib/actions/doctor.actions';
-import { AppointmentFormSchema } from '@/lib/validation';
+import {
+  getAppointmentSchema,
+  AppointmentFormSchema,
+  ScheduleAppointmentSchema,
+  CancelAppointmentSchema,
+} from '@/lib/validation';
 
 type AppointmentFormProps = {
-  patientId: string;
+  patientId?: string;
   type: 'create' | 'schedule' | 'cancel';
+  appointment?: Appointment;
+  setOpen?: Dispatch<SetStateAction<boolean>>;
 };
 
-const AppointmentForm = ({ patientId, type }: AppointmentFormProps) => {
+const AppointmentForm = ({
+  patientId,
+  type,
+  appointment,
+  setOpen,
+}: AppointmentFormProps) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [doctors, setDoctors] = useState<Doctor[]>([]);
+  console.log('Appointment Id: ', appointment?.id);
+
+  const AppointmentFormValidation = getAppointmentSchema(type);
 
   const fetchDoctors = useCallback(async () => {
     try {
       const response = await getDoctors();
       setDoctors(response);
       console.log(response);
-    } catch (error) {}
+    } catch (error) {
+      console.error('Error fetching doctors: ', error);
+    }
   }, []);
 
   useEffect(() => {
     fetchDoctors();
   }, [fetchDoctors]);
 
-  const form = useForm<z.infer<typeof AppointmentFormSchema>>({
-    resolver: zodResolver(AppointmentFormSchema),
-    // @ts-expect-error Fix later
+  const form = useForm<
+    z.infer<
+      | typeof AppointmentFormSchema
+      | typeof ScheduleAppointmentSchema
+      | typeof CancelAppointmentSchema
+    >
+  >({
+    resolver: AppointmentFormValidation
+      ? zodResolver(AppointmentFormValidation)
+      : undefined,
     defaultValues: {
-      ...AppointmentFormDefaultValues,
+      doctor: appointment?.doctor.id,
+      schedule: appointment?.schedule
+        ? new Date(appointment.schedule)
+        : new Date(Date.now()),
+      reason: appointment ? appointment.reason : '',
+      notes: appointment?.notes || '',
+      cancellationReason: appointment?.cancellationReason || '',
       patient: patientId,
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof AppointmentFormSchema>) => {
+  const onSubmit = async (
+    values: z.infer<
+      | typeof AppointmentFormSchema
+      | typeof ScheduleAppointmentSchema
+      | typeof CancelAppointmentSchema
+    >,
+  ) => {
+    console.log(form.formState.errors);
     setIsLoading(true);
     console.log('Appointment Form', values);
+    console.log('Patient Id: ', patientId);
+    console.log('Schedule Appointment clicked!');
+
+    let status;
+    switch (type) {
+      case 'schedule':
+        status = 'scheduled';
+        break;
+      case 'cancel':
+        status = 'cancelled';
+        break;
+      default:
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        status = 'pending';
+    }
     try {
-      console.log('Appointment Form', values);
-      const response = await createAppointment(values);
-      if (response) {
-        console.log('Appointment Created: ', response);
-        router.push(
-          `/patient/${patientId}/new-appointment/success?appointmentId=${response.id}`,
+      if (type === 'create') {
+        console.log('Appointment Form', values);
+        const response = await createAppointment(values as AppointmentForm);
+        if (response) {
+          console.log('Appointment Created: ', response);
+          router.push(
+            `/patient/${patientId}/new-appointment/success?appointmentId=${response.id}`,
+          );
+        }
+      } else {
+        const updateDetails = {
+          doctor: values.doctor,
+          schedule: values.schedule,
+          status: status,
+          cancellationReason: values.cancellationReason,
+        };
+        console.log('Update Details: ', updateDetails);
+        const updatedAppointment = await updateAppointment(
+          appointment?.id,
+          updateDetails,
         );
+
+        if (updatedAppointment) {
+          setOpen && setOpen(false);
+        }
       }
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   };
-
-  let status;
-  switch (type) {
-    case 'schedule':
-      status = 'scheduled';
-      break;
-    case 'cancel':
-      status = 'cancelled';
-      break;
-    default:
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      status = 'pending';
-  }
 
   let buttonLabel;
   switch (type) {

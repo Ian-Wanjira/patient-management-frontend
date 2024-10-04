@@ -19,12 +19,7 @@ export const RegisterFormSchema = z.object({
   phone: z
     .string()
     .refine((phone) => /^\+\d{10,15}$/.test(phone), 'Invalid phone number'),
-  dateOfBirth: z.coerce.date().transform((date) => {
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const day = date.getDate().toString().padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  }),
+  dateOfBirth: z.coerce.date(),
   gender: z.enum(['male', 'female', 'other']),
   address: z
     .string()
@@ -89,19 +84,40 @@ export const RegisterFormSchema = z.object({
 export const AppointmentFormSchema = z.object({
   patient: z.string(),
   doctor: z.string().min(1, { message: 'Select at least 1 doctor' }),
-  schedule: z.coerce.date().transform((date) => {
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const day = date.getDate().toString().padStart(2, '0');
-    const hours = date.getHours().toString().padStart(2, '0');
-    const minutes = date.getMinutes().toString().padStart(2, '0');
-    const seconds = date.getSeconds().toString().padStart(2, '0');
-    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
-  }),
+  schedule: z.coerce.date(),
   reason: z
     .string()
     .min(2, { message: 'Reason must be at least 2 characters' })
-    .max(500, { message: 'Reason must be at most 500 characters' }),
+    .max(500, { message: 'Reason must be at most 500 characters' })
+    .optional(),
   notes: z.string().optional(),
   cancellationReason: z.string().optional(),
 });
+
+export const ScheduleAppointmentSchema = z.object({
+  doctor: z.string().min(2, 'Select at least one doctor'),
+  schedule: z.coerce.date(),
+  reason: z.string().optional(),
+  notes: z.string().optional(),
+  cancellationReason: z.string().optional(),
+});
+
+export const CancelAppointmentSchema = z.object({
+  doctor: z.string().min(2, 'Select at least one doctor'),
+  schedule: z.coerce.date(),
+  reason: z.string().optional(),
+  notes: z.string().optional(),
+  cancellationReason: z.string().optional(),
+});
+export function getAppointmentSchema(type: string) {
+  switch (type) {
+    case 'create':
+      return AppointmentFormSchema;
+
+    case 'schedule':
+      return ScheduleAppointmentSchema;
+
+    case 'cancel':
+      return CancelAppointmentSchema;
+  }
+}

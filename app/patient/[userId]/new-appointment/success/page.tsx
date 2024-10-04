@@ -9,7 +9,6 @@ const page = async ({ searchParams, params: { userId } }: SearchParamProps) => {
     searchParams.appointmentId as string,
   );
   const schedule = formatDateTime(appointment.schedule);
-  console.log('Scheduled Date: ', schedule);
 
   return (
     <div className="flex h-screen max-h-screen px[5%]">

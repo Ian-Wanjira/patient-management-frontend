@@ -42,7 +42,6 @@ const RegisterForm = ({ patientData }: { patientData: UserParams }) => {
 
   const form = useForm<z.infer<typeof RegisterFormSchema>>({
     resolver: zodResolver(RegisterFormSchema),
-    // @ts-expect-error Fix later
     defaultValues: {
       ...PatientFormDefaultValues,
       name: patientData.name,
@@ -58,6 +57,13 @@ const RegisterForm = ({ patientData }: { patientData: UserParams }) => {
       const formData = new FormData();
 
       Object.entries(values).forEach(([key, value]) => {
+        // Convert `dateOfBirth` to `YYYY-MM-DD` format
+        if (key === 'dateOfBirth' && value instanceof Date) {
+          const formattedDate = value.toISOString().split('T')[0]; // Extract date part
+          formData.append(key, formattedDate);
+          return;
+        }
+
         // Handle the `identificationDocument` field explicitly
         if (key === 'identificationDocument' && Array.isArray(value)) {
           value.forEach((file) => {

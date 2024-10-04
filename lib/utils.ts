@@ -72,7 +72,7 @@ export const convertFileToUrl = (file: File) => URL.createObjectURL(file);
 //     timeOnly: formattedTime,
 //   };
 // };
-export const formatDateTime = (dateString: string) => {
+export const formatDateTime = (dateString: Date) => {
   const date = new Date(dateString);
   const options: Intl.DateTimeFormatOptions = {
     month: 'short',
@@ -81,7 +81,7 @@ export const formatDateTime = (dateString: string) => {
     hour: 'numeric',
     minute: 'numeric',
     hour12: true,
-    timeZone: 'UTC',
+    // timeZone: 'UTC',
   };
 
   return date.toLocaleString('en-US', options);

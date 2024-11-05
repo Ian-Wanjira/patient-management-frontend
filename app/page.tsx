@@ -1,12 +1,21 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 
 import PatientForm from '@/components/forms/PatientForm';
-import RegisterForm from '@/components/forms/RegisterForm';
-import PasskeyModal from '@/components/PasskeyModal';
+
+const Loading = dynamic(() => import('./loading'), {
+  ssr: false,
+});
+const RegisterForm = dynamic(() => import('@/components/forms/RegisterForm'), {
+  loading: () => <Loading />,
+});
+const PasskeyModal = dynamic(() => import('@/components/PasskeyModal'), {
+  loading: () => <Loading />,
+});
 
 const Home = ({ searchParams }: SearchParamProps) => {
   const [isRegisterForm, setIsRegisterForm] = useState(false);
@@ -60,7 +69,7 @@ const Home = ({ searchParams }: SearchParamProps) => {
                 height={1000}
                 width={1000}
                 alt="logo"
-                className="mb-12 h-10 w-fit"
+                className="mb-8 h-10 w-fit"
               />
               <PatientForm
                 setRegisterForm={setIsRegisterForm}

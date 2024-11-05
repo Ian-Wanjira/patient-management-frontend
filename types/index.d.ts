@@ -14,17 +14,6 @@ declare type Doctor = {
   image: string;
 };
 
-declare type Appointment = {
-  id: string;
-  patient: PatientData;
-  doctor: Doctor;
-  schedule: Date;
-  reason?: string;
-  notes?: string;
-  status?: string;
-  cancellationReason?: string;
-};
-
 declare type AppointmentForm = {
   patient: string;
   doctor: string;
@@ -54,6 +43,27 @@ declare type AppointmentStatus = {
   pending: string;
   cancelled: string;
 };
+
+declare interface Appointment {
+  id: string;
+  patient: PatientData;
+  doctor: Doctor;
+  schedule: Date;
+  reason?: string;
+  notes?: string;
+  status?: string;
+  cancellationReason?: string;
+}
+
+declare interface AppointmentAPIResponse {
+  count: number;
+  next: string;
+  previous: string | null;
+  results: Appointment[];
+  scheduled_count: number;
+  cancelled_count: number;
+  pending_count: number;
+}
 
 declare interface UserParams {
   id?: string;

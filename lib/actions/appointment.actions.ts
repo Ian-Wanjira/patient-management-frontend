@@ -1,5 +1,3 @@
-'use server';
-
 import axios from 'axios';
 import { revalidatePath } from 'next/cache';
 
@@ -20,35 +18,24 @@ export const createAppointment = async (values: AppointmentForm) => {
   }
 };
 
-export const getAppointments = async () => {
+export const getAppointments = async (
+  page: number,
+): Promise<AppointmentAPIResponse> => {
   try {
-    const response = await axiosInstance.get('/api/appointment/list/');
-    const appointments = response.data;
-
-    const counts = appointments.reduce(
-      (acc: AppointmentCounts, appointment: Appointment) => {
-        if (appointment.status === 'scheduled') {
-          acc.scheduled++;
-        } else if (appointment.status === 'pending') {
-          acc.pending++;
-        } else if (appointment.status === 'cancelled') {
-          acc.cancelled++;
-        }
-
-        return acc;
-      },
-      { scheduled: 0, pending: 0, cancelled: 0 },
+    const response = await axiosInstance.get(
+      `/api/appointment/list/?page=${page}`,
     );
-
-    return { appointments, counts };
+    return response.data;
   } catch (error) {
     console.error(error);
+    throw error;
   }
 };
 
 export const getAppointment = async (id: string) => {
   try {
     const response = await axiosInstance.get(`/api/appointment/${id}/`);
+
     return response.data;
   } catch (error) {
     console.error(error);

@@ -7,10 +7,12 @@ import AppointmentModal from '@/components/AppointmentModal';
 import StatusBadge from '@/components/StatusBadge';
 import { formatDateTime } from '@/lib/utils';
 
-export const columns: ColumnDef<Appointment>[] = [
+export const getColumns = (page: number): ColumnDef<Appointment>[] => [
   {
     header: '#',
-    cell: ({ row }) => <p className="text-14-medium">{row.index + 1}</p>,
+    cell: ({ row }) => (
+      <p className="text-14-medium">{(page - 1) * 10 + row.index + 1}</p>
+    ),
   },
   {
     accessorKey: 'patient',

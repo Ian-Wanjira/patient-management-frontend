@@ -4,7 +4,6 @@ import Image from 'next/image';
 import { StatusIcon } from '@/constants';
 
 const StatusBadge = ({ status }: { status: Status }) => {
-  console.log('Status', status);
   return (
     <div
       className={clsx('status-badge', {

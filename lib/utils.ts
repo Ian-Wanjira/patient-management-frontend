@@ -1,3 +1,4 @@
+import { QueryClient } from '@tanstack/react-query';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -86,3 +87,5 @@ export const formatDateTime = (dateString: Date) => {
 
   return date.toLocaleString('en-US', options);
 };
+
+export const queryClient = new QueryClient();

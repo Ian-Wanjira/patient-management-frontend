@@ -1,16 +1,19 @@
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
+import { useState } from 'react';
 
 import StatCard from '@/components/StatCard';
-import { columns } from '@/components/table/columns';
+import { getColumns } from '@/components/table/columns';
 import { DataTable } from '@/components/table/DataTable';
-import { getAppointments } from '@/lib/actions/appointment.actions';
+import useAppointments from '@/lib/hooks/useAppointments';
+const AdminPage = () => {
+  const [page, setPage] = useState(1);
+  const { data } = useAppointments(page);
 
-const page = async () => {
-  const { appointments, counts } = (await getAppointments()) as {
-    appointments: Appointment[];
-    counts: AppointmentCounts;
-  };
+  const handleNextPage = data?.next ? () => setPage(page + 1) : () => {};
+  const handlePrevPage = data?.previous ? () => setPage(page - 1) : () => {};
 
   return (
     <div className="mx-auto flex max-w-7xl flex-col space-y-14">
@@ -39,28 +42,33 @@ const page = async () => {
         <section className="admin-stat">
           <StatCard
             type="appointments"
-            count={counts.scheduled}
+            count={data?.scheduled_count}
             label="Scheduled appointments"
             icon="/assets/icons/appointments.svg"
           />
           <StatCard
             type="pending"
-            count={counts.pending}
+            count={data?.pending_count}
             label="Pending appointments"
             icon="/assets/icons/pending.svg"
           />
           <StatCard
             type="cancelled"
-            count={counts.cancelled}
+            count={data?.cancelled_count}
             label="Cancelled appointments"
             icon="/assets/icons/cancelled.svg"
           />
         </section>
 
-        <DataTable columns={columns} data={appointments} />
+        <DataTable
+          columns={getColumns(page)}
+          data={data?.results ?? []}
+          onNextPage={handleNextPage}
+          onPrevPage={handlePrevPage}
+        />
       </main>
     </div>
   );
 };
 
-export default page;
+export default AdminPage;

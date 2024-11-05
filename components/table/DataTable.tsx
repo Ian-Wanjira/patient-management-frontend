@@ -22,11 +22,15 @@ import {
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  onNextPage: () => void;
+  onPrevPage: () => void;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  onNextPage,
+  onPrevPage,
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
@@ -84,8 +88,8 @@ export function DataTable<TData, TValue>({
         <Button
           variant="outline"
           size="sm"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
+          onClick={onPrevPage}
+          disabled={!onPrevPage}
           className="shad-gray-btn"
         >
           <Image
@@ -98,8 +102,8 @@ export function DataTable<TData, TValue>({
         <Button
           variant="outline"
           size="sm"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
+          onClick={onNextPage}
+          disabled={!onNextPage}
           className="shad-gray-btn"
         >
           <Image

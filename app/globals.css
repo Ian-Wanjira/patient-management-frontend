@@ -36,7 +36,7 @@
   }
 
   .sub-container {
-    @apply mx-auto flex size-full flex-col py-10;
+    @apply mx-auto flex size-full flex-col py-8;
   }
 
   .header {

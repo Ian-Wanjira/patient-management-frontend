@@ -18,11 +18,9 @@ import { FormFieldTypes } from '@/components/forms/PatientForm';
 import SubmitButton from '@/components/SubmitButton';
 import { Form } from '@/components/ui/form';
 import { SelectItem } from '@/components/ui/select';
-import {
-  createAppointment,
-  updateAppointment,
-} from '@/lib/actions/appointment.actions';
+import { createAppointment } from '@/lib/actions/appointment.actions';
 import { getDoctors } from '@/lib/actions/doctor.actions';
+import useUpdateAppointment from '@/lib/hooks/useUpdateAppointment';
 import {
   getAppointmentSchema,
   AppointmentFormSchema,
@@ -46,7 +44,7 @@ const AppointmentForm = ({
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [doctors, setDoctors] = useState<Doctor[]>([]);
-  console.log('Appointment Id: ', appointment?.id);
+  const { mutate: updateAppointment } = useUpdateAppointment();
 
   const AppointmentFormValidation = getAppointmentSchema(type);
 
@@ -129,14 +127,9 @@ const AppointmentForm = ({
           cancellationReason: values.cancellationReason,
         };
         console.log('Update Details: ', updateDetails);
-        const updatedAppointment = await updateAppointment(
-          appointment?.id,
-          updateDetails,
-        );
+        await updateAppointment({ id: appointment!.id, updateDetails }); // Use the mutate function from the hook
 
-        if (updatedAppointment) {
-          setOpen && setOpen(false);
-        }
+        if (setOpen) setOpen(false);
       }
     } catch (error) {
       console.error(error);

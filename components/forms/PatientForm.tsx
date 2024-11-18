@@ -1,13 +1,13 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import dynamic from 'next/dynamic';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-const CustomFormField = dynamic(() => import('@/components/CustomFormField'));
+// const CustomFormField = dynamic(() => import('@/components/CustomFormField'));
 
+import CustomFormField from '@/components/CustomFormField';
 import SubmitButton from '@/components/SubmitButton';
 import { Form } from '@/components/ui/form';
 import { InitialFormDefaultValues } from '@/constants';

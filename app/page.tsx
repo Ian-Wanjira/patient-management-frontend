@@ -6,13 +6,12 @@ import Link from 'next/link';
 import { useState } from 'react';
 
 import PatientForm from '@/components/forms/PatientForm';
+import RegisterForm from '@/components/forms/RegisterForm';
 
 const Loading = dynamic(() => import('./loading'), {
   ssr: false,
 });
-const RegisterForm = dynamic(() => import('@/components/forms/RegisterForm'), {
-  loading: () => <Loading />,
-});
+
 const PasskeyModal = dynamic(() => import('@/components/PasskeyModal'), {
   loading: () => <Loading />,
 });

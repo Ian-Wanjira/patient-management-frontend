@@ -23,7 +23,7 @@ A healthcare patient management system that allows patients to easily register, 
 ## Tech Stack
 
 - **Frontend:** Next.js, TypeScript, Tailwind CSS, React Query
-- **Backend:** DjangoRestFramework (included in this [repo]())
+- **Backend:** DjangoRestFramework (included in this [repo](https://github.com/Ian-Wanjira/patient-management-api))
 - **Dependencies:**
   - Form validation: `react-hook-form, zod`, `@hookform/resolvers`
   - UI components: `shadcn ui,@radix-ui`, `lucide-react`

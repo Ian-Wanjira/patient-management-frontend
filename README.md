@@ -8,9 +8,7 @@ A healthcare patient management system that allows patients to easily register, 
 - [Tech Stack](#tech-stack)
 - [Getting Started](#getting-started)
 - [Running the Project](#running-the-project)
-- [Deployment](#deployment)
-- [Contributing](#contributing)
-- [License](#license)
+- [MIT License](https://opensource.org/license/MIT)
 
 ## Features
 
@@ -42,6 +40,8 @@ First, clone the repository:
 git clone https://github.com/Ian-Wanjira/patient-management-frontend.git
 cd patient-management-frontend
 ```
+
+## Running the Project
 
 Next, install the dependencies:
 
